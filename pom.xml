@@ -31,7 +31,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <checkstyle.suppressions.location>checkstyle/suppressions.xml</checkstyle.suppressions.location>
-    <schemaRegistryUrl>http://localhost:8081</schemaRegistryUrl>
+    <schemaRegistryUrl>https://psrc-8kz20.us-east-2.aws.confluent.cloud</schemaRegistryUrl>
     <schemaRegistryBasicAuthUserInfo></schemaRegistryBasicAuthUserInfo>
     <io.confluent.schema-registry.version>${confluent.version.range}</io.confluent.schema-registry.version>
       <log4j2-version>2.19.0</log4j2-version>
@@ -159,7 +159,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
           <version>${io.confluent.schema-registry.version}</version>
           <configuration>
               <schemaRegistryUrls>
-                  <param>https://psrc-8kz20.us-east-2.aws.confluent.cloud</param>
+                  <param>${schemaRegistryUrl}</param>
               </schemaRegistryUrls>
               <userInfoConfig>${confluentUserInfoConfig}</userInfoConfig>
               <subjects>
@@ -176,7 +176,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
             <version>7.3.1</version>
             <configuration>
                 <schemaRegistryUrls>
-                    <param>https://psrc-8kz20.us-east-2.aws.confluent.cloud</param>
+                    <param>${schemaRegistryUrl}</param>
                 </schemaRegistryUrls>
                 <compatibilityLevels>
                     <transactions-value>FORWARD</transactions-value>
