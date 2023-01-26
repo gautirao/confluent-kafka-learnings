@@ -1,0 +1,248 @@
+<project xmlns="http://maven.apache.org/POM/4.0.0" 
+xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 
+http://maven.apache.org/xsd/maven-4.0.0.xsd">
+  <modelVersion>4.0.0</modelVersion>
+
+  <parent>
+      <groupId>io.confluent</groupId>
+      <artifactId>rest-utils-parent</artifactId>
+      <version>7.3.1</version>
+  </parent>
+
+  <artifactId>java-client-avro-examples</artifactId>
+  <packaging>jar</packaging>
+  <version>7.3.1</version>
+
+  <organization>
+      <name>Confluent, Inc.</name>
+      <url>http://confluent.io</url>
+  </organization>
+  <url>http://confluent.io</url>
+  <description>
+     Avro Client Example
+  </description>
+
+  <properties>
+    <!-- Keep versions as properties to allow easy modification -->
+    <java.version>8</java.version>
+    <gson.version>2.2.4</gson.version>
+    <!-- Maven properties for compilation -->
+    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+    <checkstyle.suppressions.location>checkstyle/suppressions.xml</checkstyle.suppressions.location>
+    <schemaRegistryUrl>http://localhost:8081</schemaRegistryUrl>
+    <schemaRegistryBasicAuthUserInfo></schemaRegistryBasicAuthUserInfo>
+    <io.confluent.schema-registry.version>${confluent.version.range}</io.confluent.schema-registry.version>
+      <log4j2-version>2.19.0</log4j2-version>
+    <confluentUserInfoConfig></confluentUserInfoConfig>
+  </properties>
+
+  <repositories>
+    <repository>
+      <id>confluent</id>
+      <name>Confluent</name>
+      <url>https://packages.confluent.io/maven/</url>
+    </repository>
+      <repository>
+      <id>maven</id>
+      <name>maven2</name>
+      <url> https://repo.maven.apache.org/maven2/</url>
+    </repository>
+  </repositories>
+
+  <pluginRepositories>
+    <pluginRepository>
+      <id>confluent</id>
+      <url>https://packages.confluent.io/maven/</url>
+    </pluginRepository>
+  </pluginRepositories>
+
+  <dependencies>  
+    <!-- Add the Kafka dependencies -->
+    <dependency>
+      <groupId>io.confluent</groupId>
+      <artifactId>kafka-avro-serializer</artifactId>
+      <version>${io.confluent.schema-registry.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>org.apache.kafka</groupId>
+      <artifactId>kafka-clients</artifactId>
+      <version>${kafka.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>com.google.code.gson</groupId>
+      <artifactId>gson</artifactId>
+      <version>${gson.version}</version>
+    </dependency>
+      <!-- https://mvnrepository.com/artifact/org.slf4j/slf4j-log4j12 -->
+      <dependency>
+          <groupId>org.slf4j</groupId>
+          <artifactId>slf4j-reload4j</artifactId>
+          <version>2.0.6</version>
+      </dependency>
+
+      <!-- https://mvnrepository.com/artifact/io.confluent/confluent-log4j -->
+      <dependency>
+          <groupId>io.confluent</groupId>
+          <artifactId>confluent-log4j</artifactId>
+          <version>1.2.17-cp10</version>
+      </dependency>
+
+
+      <!-- SLF4J Bridge -->
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-slf4j-impl</artifactId>
+          <version>2.11.2</version>
+      </dependency>
+
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-api</artifactId>
+          <version>${log4j2-version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-core</artifactId>
+          <version>${log4j2-version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.apache.logging.log4j</groupId>
+          <artifactId>log4j-slf4j-impl</artifactId>
+          <version>${log4j2-version}</version>
+      </dependency>
+      <dependency>
+          <groupId>org.projectlombok</groupId>
+          <artifactId>lombok</artifactId>
+          <version>1.18.24</version>
+       </dependency>
+  </dependencies>
+
+  <build>
+    <plugins>
+      <plugin>
+        <groupId>org.apache.maven.plugins</groupId>
+        <artifactId>maven-compiler-plugin</artifactId>
+        <version>3.8.1</version>
+        <configuration>
+          <source>${java.version}</source>
+          <target>${java.version}</target>
+          <compilerArgs>
+            <arg>-Xlint:all</arg>
+          </compilerArgs>
+        </configuration>
+      </plugin>
+      <plugin>
+        <groupId>org.apache.avro</groupId>
+        <artifactId>avro-maven-plugin</artifactId>
+        <version>${avro.version}</version>
+        <executions>
+          <execution>
+          <phase>generate-sources</phase>
+          <goals>
+            <goal>schema</goal>
+          </goals>
+          <configuration>
+            <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/</sourceDirectory>
+            <includes>
+              <include>Payment.avsc</include>
+            </includes>
+            <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+          </configuration>
+        </execution>
+      </executions>
+      </plugin>
+      <plugin>
+          <groupId>io.confluent</groupId>
+          <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+          <version>${io.confluent.schema-registry.version}</version>
+          <configuration>
+              <schemaRegistryUrls>
+                  <param>https://psrc-8kz20.us-east-2.aws.confluent.cloud</param>
+              </schemaRegistryUrls>
+              <userInfoConfig>${confluentUserInfoConfig}</userInfoConfig>
+              <subjects>
+                  <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2b.avsc</transactions-value>
+              </subjects>
+          </configuration>
+          <goals>
+              <goal>test-compatibility</goal>
+          </goals>
+      </plugin>
+        <plugin>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+            <version>7.3.1</version>
+            <configuration>
+                <schemaRegistryUrls>
+                    <param>https://psrc-8kz20.us-east-2.aws.confluent.cloud</param>
+                </schemaRegistryUrls>
+                <compatibilityLevels>
+                    <transactions-value>FORWARD</transactions-value>
+                </compatibilityLevels>
+                <userInfoConfig>${confluentUserInfoConfig}</userInfoConfig>
+                <subjects>
+                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2Forward.avsc</transactions-value>
+                </subjects>
+                <schemaTypes>
+                    <payment>AVRO</payment>
+                </schemaTypes>
+
+            </configuration>
+            <goals>
+                <goal>register</goal>
+            </goals>
+        </plugin>
+
+        <plugin>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+            <version>7.3.1</version>
+            <configuration>
+                <schemaRegistryUrls>
+                    <param>https://psrc-8kz20.us-east-2.aws.confluent.cloud</param>
+                </schemaRegistryUrls>
+                <compatibilityLevels>
+                    <transactions-value>FORWARD</transactions-value>
+                </compatibilityLevels>
+                <userInfoConfig>VXAJAXC4MMDY7DBD:LdVXAJAXC4MMDY7DBDuv8PrnFFe0oE7cqb3WBwISlUgruFqWx6CUFJ6uqeKVchseXGIYCdQIeQu/7Yac</userInfoConfig>
+                <subjects>
+                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2Forward.avsc</transactions-value>
+                </subjects>
+                <schemaTypes>
+                    <payment>AVRO</payment>
+                </schemaTypes>
+
+            </configuration>
+            <goals>
+                <goal>set-compatibility</goal>
+            </goals>
+        </plugin>
+
+        <plugin>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+            <version>7.3.1</version>
+            <configuration>
+                <compatibilityLevels>
+                    <transactions-value>FORWARD</transactions-value>
+                </compatibilityLevels>
+                <schemas>
+                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2Forward.avsc</transactions-value>
+                </schemas>
+                <previousSchemaPaths>
+                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2a.avsc</transactions-value>
+                </previousSchemaPaths>
+                <schemaTypes>
+                    <payment>AVRO</payment>
+                </schemaTypes>
+
+            </configuration>
+            <goals>
+                <goal>test-local-compatibility</goal>
+            </goals>
+        </plugin>
+    </plugins>
+  </build>
+</project>
