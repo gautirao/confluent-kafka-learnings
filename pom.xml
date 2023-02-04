@@ -4,21 +4,13 @@ xsi:schemaLocation="http://maven.apache.org/POM/4.0.0
 http://maven.apache.org/xsd/maven-4.0.0.xsd">
   <modelVersion>4.0.0</modelVersion>
 
-  <parent>
-      <groupId>io.confluent</groupId>
-      <artifactId>rest-utils-parent</artifactId>
-      <version>7.3.1</version>
-  </parent>
 
-  <artifactId>java-client-avro-examples</artifactId>
+    <groupId>com.natwest</groupId>
+  <artifactId>java-client-avro-producer-examples</artifactId>
   <packaging>jar</packaging>
   <version>7.3.1</version>
 
-  <organization>
-      <name>Confluent, Inc.</name>
-      <url>http://confluent.io</url>
-  </organization>
-  <url>http://confluent.io</url>
+
   <description>
      Avro Client Example
   </description>
@@ -32,10 +24,13 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <checkstyle.suppressions.location>checkstyle/suppressions.xml</checkstyle.suppressions.location>
     <schemaRegistryUrl>https://psrc-8kz20.us-east-2.aws.confluent.cloud</schemaRegistryUrl>
-    <schemaRegistryBasicAuthUserInfo></schemaRegistryBasicAuthUserInfo>
-    <io.confluent.schema-registry.version>${confluent.version.range}</io.confluent.schema-registry.version>
+    <schemaRegistryBasicAuthUserInfo>6VRQFCHS5PPL5AIG:jT2fieiR819YKb0VbTAH1fgX/urzkBT31xMa19VBOZMlivvjpgrjpHtRbDjf9DZb</schemaRegistryBasicAuthUserInfo>
+      <confluentUserInfoConfig>MZDLPVDJJOWUK67I:SmWXW+WSOk6kGdpM0NsI6vxE/410N34QtV6G5KAJonyMlDLb3JrnOF7NfshBIs1E</confluentUserInfoConfig>
+    <io.confluent.schema-registry.version>7.3.1</io.confluent.schema-registry.version>
       <log4j2-version>2.19.0</log4j2-version>
-    <confluentUserInfoConfig></confluentUserInfoConfig>
+      <avro.version>1.11.0</avro.version>
+      <kafka.version>7.3.1-ccs</kafka.version>
+
   </properties>
 
   <repositories>
@@ -121,55 +116,40 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
 
   <build>
     <plugins>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-compiler-plugin</artifactId>
-        <version>3.8.1</version>
-        <configuration>
-          <source>${java.version}</source>
-          <target>${java.version}</target>
-          <compilerArgs>
-            <arg>-Xlint:all</arg>
-          </compilerArgs>
-        </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.avro</groupId>
-        <artifactId>avro-maven-plugin</artifactId>
-        <version>${avro.version}</version>
-        <executions>
-          <execution>
-          <phase>generate-sources</phase>
-          <goals>
-            <goal>schema</goal>
-          </goals>
-          <configuration>
-            <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/</sourceDirectory>
-            <includes>
-              <include>Payment.avsc</include>
-            </includes>
-            <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
-          </configuration>
-        </execution>
-      </executions>
-      </plugin>
-      <plugin>
-          <groupId>io.confluent</groupId>
-          <artifactId>kafka-schema-registry-maven-plugin</artifactId>
-          <version>${io.confluent.schema-registry.version}</version>
-          <configuration>
-              <schemaRegistryUrls>
-                  <param>${schemaRegistryUrl}</param>
-              </schemaRegistryUrls>
-              <userInfoConfig>${confluentUserInfoConfig}</userInfoConfig>
-              <subjects>
-                  <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2b.avsc</transactions-value>
-              </subjects>
-          </configuration>
-          <goals>
-              <goal>test-compatibility</goal>
-          </goals>
-      </plugin>
+        <plugin>
+            <groupId>org.apache.maven.plugins</groupId>
+            <artifactId>maven-compiler-plugin</artifactId>
+            <version>3.8.1</version>
+            <configuration>
+                <source>${java.version}</source>
+                <target>${java.version}</target>
+                <compilerArgs>
+                    <arg>-Xlint:all</arg>
+                </compilerArgs>
+            </configuration>
+        </plugin>
+        <plugin>
+            <groupId>org.apache.avro</groupId>
+            <artifactId>avro-maven-plugin</artifactId>
+            <version>${avro.version}</version>
+            <executions>
+                <execution>
+                    <phase>generate-sources</phase>
+                    <goals>
+                        <goal>schema</goal>
+                    </goals>
+                    <configuration>
+                        <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/</sourceDirectory>
+                        <includes>
+                            <include>Payment.avsc</include>
+                            <include>Refund.avsc</include>
+                        </includes>
+                        <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
+                    </configuration>
+                </execution>
+            </executions>
+        </plugin>
+
         <plugin>
             <groupId>io.confluent</groupId>
             <artifactId>kafka-schema-registry-maven-plugin</artifactId>
@@ -178,71 +158,35 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 <schemaRegistryUrls>
                     <param>${schemaRegistryUrl}</param>
                 </schemaRegistryUrls>
-                <compatibilityLevels>
-                    <transactions-value>FORWARD</transactions-value>
-                </compatibilityLevels>
-                <userInfoConfig>${confluentUserInfoConfig}</userInfoConfig>
+                <userInfoConfig>${schemaRegistryBasicAuthUserInfo}</userInfoConfig>
                 <subjects>
-                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2Forward.avsc</transactions-value>
+                    <all-types-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/AllTypes.avsc</all-types-value>
+                    <refund>src/main/resources/avro/io/confluent/examples/clients/basicavro/Refund.avsc</refund>
+                    <payment>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment.avsc</payment>
                 </subjects>
                 <schemaTypes>
+                    <all-types-value>AVRO</all-types-value>
+                    <refund>AVRO</refund>
                     <payment>AVRO</payment>
                 </schemaTypes>
-
+                <references>
+                    <all-types-value>
+                        <reference>
+                            <name>io.confluent.examples.clients.basicavro.Payment</name>
+                            <subject>payment</subject>
+                        </reference>
+                        <reference>
+                            <name>io.confluent.examples.clients.basicavro.Refund</name>
+                            <subject>refund</subject>
+                        </reference>
+                    </all-types-value>
+                </references>
             </configuration>
             <goals>
                 <goal>register</goal>
             </goals>
         </plugin>
 
-        <plugin>
-            <groupId>io.confluent</groupId>
-            <artifactId>kafka-schema-registry-maven-plugin</artifactId>
-            <version>7.3.1</version>
-            <configuration>
-                <schemaRegistryUrls>
-                    <param>https://psrc-8kz20.us-east-2.aws.confluent.cloud</param>
-                </schemaRegistryUrls>
-                <compatibilityLevels>
-                    <transactions-value>FORWARD</transactions-value>
-                </compatibilityLevels>
-                <userInfoConfig>VXAJAXC4MMDY7DBD:LdVXAJAXC4MMDY7DBDuv8PrnFFe0oE7cqb3WBwISlUgruFqWx6CUFJ6uqeKVchseXGIYCdQIeQu/7Yac</userInfoConfig>
-                <subjects>
-                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2Forward.avsc</transactions-value>
-                </subjects>
-                <schemaTypes>
-                    <payment>AVRO</payment>
-                </schemaTypes>
-
-            </configuration>
-            <goals>
-                <goal>set-compatibility</goal>
-            </goals>
-        </plugin>
-
-        <plugin>
-            <groupId>io.confluent</groupId>
-            <artifactId>kafka-schema-registry-maven-plugin</artifactId>
-            <version>7.3.1</version>
-            <configuration>
-                <compatibilityLevels>
-                    <transactions-value>FORWARD</transactions-value>
-                </compatibilityLevels>
-                <schemas>
-                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2Forward.avsc</transactions-value>
-                </schemas>
-                <previousSchemaPaths>
-                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment2a.avsc</transactions-value>
-                </previousSchemaPaths>
-                <schemaTypes>
-                    <payment>AVRO</payment>
-                </schemaTypes>
-
-            </configuration>
-            <goals>
-                <goal>test-local-compatibility</goal>
-            </goals>
-        </plugin>
     </plugins>
   </build>
 </project>

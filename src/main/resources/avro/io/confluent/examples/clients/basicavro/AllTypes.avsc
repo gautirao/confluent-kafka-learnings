@@ -1,0 +1,4 @@
+[
+  "io.confluent.examples.clients.basicavro.Payment",
+  "io.confluent.examples.clients.basicavro.Refund"
+]

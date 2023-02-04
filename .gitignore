@@ -19,7 +19,7 @@ crashlytics-build.properties
 fabric.properties
 
 
-target
+target/
 logs
-.idea
+.idea/
 *.iml

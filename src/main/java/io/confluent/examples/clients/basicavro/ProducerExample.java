@@ -1,73 +1,96 @@
 package io.confluent.examples.clients.basicavro;
 
-import io.confluent.kafka.serializers.AbstractKafkaSchemaSerDeConfig;
+import io.confluent.kafka.schemaregistry.client.SchemaRegistryClientConfig;
+import io.confluent.kafka.serializers.AbstractKafkaAvroSerDeConfig;
+import org.apache.kafka.clients.CommonClientConfigs;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.clients.producer.ProducerRecord;
+import org.apache.kafka.common.config.SaslConfigs;
 import org.apache.kafka.common.serialization.StringSerializer;
 import io.confluent.kafka.serializers.KafkaAvroSerializer;
-import org.apache.kafka.common.errors.SerializationException;
 
 import java.util.Properties;
 import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Paths;
-import java.io.FileInputStream;
-import java.io.InputStream;
 
 public class ProducerExample {
-    private static final String TOPIC = "transactions";
-    private static final Properties props = new Properties();
-    private static String configFile;
+    private static final String TOPIC = "all-types";
+    public static final String SCHEMA_REGISTRY_URL = "https://psrc-8kz20.us-east-2.aws.confluent.cloud";
+    public static final String CONFLUENT_CLOUD_USERNAME = "MZDLPVDJJOWUK67I";
+    public static final String CONFLUENT_CLOUD_API_KEY = "SmWXW+WSOk6kGdpM0NsI6vxE/410N34QtV6G5KAJonyMlDLb3JrnOF7NfshBIs1E";
+    public static final String BOOTSTRAP_SERVERS = "pkc-ymrq7.us-east-2.aws.confluent.cloud:9092";
+    public static final String SCHEMA_REGISTRY_API_KEY = "jT2fieiR819YKb0VbTAH1fgX/urzkBT31xMa19VBOZMlivvjpgrjpHtRbDjf9DZb";
+    public static final String SCHEMA_REGISTRY_USER_NAME = "6VRQFCHS5PPL5AIG";
 
-    @SuppressWarnings("InfiniteLoopStatement")
     public static void main(final String[] args) throws IOException {
 
-        if (args.length > 1) {{
-            // Backwards compatibility, assume localhost
-            props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-            props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
-        }
-          // Backwards compatibility, assume localhost
-          props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, "localhost:9092");
-          props.put(AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, "http://localhost:8081");
-        } else {
-          // Load properties from a local configuration file
-          // Create the configuration file (e.g. at '$HOME/.confluent/java.config') with configuration parameters
-          // to connect to your Kafka cluster, which can be on your local host, Confluent Cloud, or any other cluster.
-          // Documentation at https://docs.confluent.io/platform/current/tutorials/examples/clients/docs/java.html
-          configFile = "/Users/gouthamrao/Documents/goutham/workspaces/rbs/learn-kafka-courses/examples/clients/avro/src/main/resources/confluent.config";
-          if (!Files.exists(Paths.get(configFile))) {
-            throw new IOException(configFile + " not found.");
-          } else {
-            try (InputStream inputStream = Files.newInputStream(Paths.get(configFile))) {
-              props.load(inputStream);
+        Properties props = buildProducerProperties();
+
+        System.out.println("Props : " + props);
+        try (KafkaProducer<String, Payment> producer = new KafkaProducer<String, Payment>(props)) {
+
+            for (long i = 1; i <= 10; i++) {
+                final Payment payment = createPayment(i);
+                final ProducerRecord<String, Payment> paymentRecord = new ProducerRecord<>(TOPIC, payment.getId().toString(), payment);
+                producer.send(paymentRecord);
+                Thread.sleep(1000L);
             }
-          }
+            producer.flush();
+            System.out.printf("Successfully produced 2 messages to a topic called %s%n", TOPIC);
+        } catch (final Exception e) {
+            e.printStackTrace();
         }
+
+        try (KafkaProducer<String, Refund> producer = new KafkaProducer<String, Refund>(props)) {
+
+            for (long i = 1; i <= 10; i++) {
+                final Refund refund = createRefund(i);
+                final ProducerRecord<String, Refund> refundRecord = new ProducerRecord<>(TOPIC, refund.getId().toString(), refund);
+                producer.send(refundRecord);
+                Thread.sleep(1000L);
+            }
+            producer.flush();
+            System.out.printf("Successfully produced 2 messages to a topic called %s%n", TOPIC);
+        } catch (final Exception e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    private static Properties buildProducerProperties() {
+        Properties props = new Properties();
+        props.put(ProducerConfig.BOOTSTRAP_SERVERS_CONFIG, BOOTSTRAP_SERVERS);
+        props.put(CommonClientConfigs.SECURITY_PROTOCOL_CONFIG,"SASL_SSL");
+        props.put(SaslConfigs.SASL_JAAS_CONFIG, "org.apache.kafka.common.security.plain.PlainLoginModule required username='" + CONFLUENT_CLOUD_USERNAME + "' password='" + CONFLUENT_CLOUD_API_KEY + "';");
+        props.put(SaslConfigs.SASL_MECHANISM,"PLAIN");
+        props.put(CommonClientConfigs.CLIENT_DNS_LOOKUP_CONFIG,"use_all_dns_ips");
+        props.put(CommonClientConfigs.SESSION_TIMEOUT_MS_CONFIG,45000);
+        props.put(ProducerConfig.ACKS_CONFIG,"all");
+        props.put(AbstractKafkaAvroSerDeConfig.AUTO_REGISTER_SCHEMAS, false);
+        props.put(AbstractKafkaAvroSerDeConfig.USE_LATEST_VERSION, true);
+
+        props.put(AbstractKafkaAvroSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG, SCHEMA_REGISTRY_URL);
+        props.put(SchemaRegistryClientConfig.BASIC_AUTH_CREDENTIALS_SOURCE,"USER_INFO");
+        props.put(SchemaRegistryClientConfig.USER_INFO_CONFIG, SCHEMA_REGISTRY_USER_NAME + ":" + SCHEMA_REGISTRY_API_KEY);
 
         props.put(ProducerConfig.ACKS_CONFIG, "all");
         props.put(ProducerConfig.RETRIES_CONFIG, 0);
         props.put(ProducerConfig.KEY_SERIALIZER_CLASS_CONFIG, StringSerializer.class);
         props.put(ProducerConfig.VALUE_SERIALIZER_CLASS_CONFIG, KafkaAvroSerializer.class);
+        return props;
+    }
 
-        System.out.println("Props : "+props);
-        try (KafkaProducer<String, Payment> producer = new KafkaProducer<String, Payment>(props)) {
+    private static Refund createRefund(long i) {
 
-            for (long i = 0; i < 10; i++) {
-                final String orderId = "id" + i;
-                final Payment payment = new Payment(orderId, 1000.00d);
-                final ProducerRecord<String, Payment> record = new ProducerRecord<>(TOPIC, payment.getId().toString(), payment);
-                producer.send(record);
-                Thread.sleep(1000L);
-            }
+        final String orderId = "id" + i;
+        final double amount = 100 + i;
+        return Refund.newBuilder().setRefundAmount(amount).setId(orderId).build();
+    }
 
-            producer.flush();
-            System.out.printf("Successfully produced 2 messages to a topic called %s%n", TOPIC);
-
-        } catch (final Exception e) {
-            e.printStackTrace();
-        }
+    private static Payment createPayment(long i) {
+        final String orderId = "id" + i;
+        final double amount = 100 + i;
+        return Payment.newBuilder().setPaymentAmount(amount).setId(orderId).build();
 
     }
 
