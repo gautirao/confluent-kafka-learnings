@@ -28,29 +28,34 @@ public class ProducerExample {
 
         System.out.println("Props : " + props);
         try (KafkaProducer<String, Payment> producer = new KafkaProducer<String, Payment>(props)) {
+            int count = 0 ;
+                    do{
+                        final Payment payment = createPayment(count);
+                        final ProducerRecord<String, Payment> paymentRecord = new ProducerRecord<>(TOPIC, payment.getId().toString(), payment);
+                        producer.send(paymentRecord);
+                        Thread.sleep(1000L);
+                        count++;
+                    } while( count <= 10);
 
-            for (long i = 1; i <= 10; i++) {
-                final Payment payment = createPayment(i);
-                final ProducerRecord<String, Payment> paymentRecord = new ProducerRecord<>(TOPIC, payment.getId().toString(), payment);
-                producer.send(paymentRecord);
-                Thread.sleep(1000L);
-            }
             producer.flush();
-            System.out.printf("Successfully produced 2 messages to a topic called %s%n", TOPIC);
+            System.out.printf("Successfully produced %d Payment messages to a topic called %s%n",count, TOPIC);
+
         } catch (final Exception e) {
             e.printStackTrace();
         }
 
         try (KafkaProducer<String, Refund> producer = new KafkaProducer<String, Refund>(props)) {
-
-            for (long i = 1; i <= 10; i++) {
-                final Refund refund = createRefund(i);
+            int count = 0 ;
+            do {
+                final Refund refund = createRefund(count);
                 final ProducerRecord<String, Refund> refundRecord = new ProducerRecord<>(TOPIC, refund.getId().toString(), refund);
                 producer.send(refundRecord);
                 Thread.sleep(1000L);
-            }
+                count++;
+            } while( count <= 10);
+
             producer.flush();
-            System.out.printf("Successfully produced 2 messages to a topic called %s%n", TOPIC);
+            System.out.printf("Successfully produced %d Refund messages to a topic called %s%n",count, TOPIC);
         } catch (final Exception e) {
             e.printStackTrace();
         }
