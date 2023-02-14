@@ -1,0 +1,23 @@
+{
+  "type": "record",
+  "namespace": "io.confluent.union.example.avro.event",
+  "name": "Event_v2_2",
+  "fields": [
+    {
+      "name": "schemaId",
+      "type": "string"
+    },
+    {
+      "name": "eventUniqueId",
+      "type": "string"
+    },
+    {
+      "name": "envelope",
+      "type": "io.confluent.union.example.avro.event.EventEnvelope_v2_2"
+    },
+    {
+      "name": "payload",
+      "type": "io.confluent.union.example.avro.event.EventPayload_v1_0"
+    }
+  ]
+}

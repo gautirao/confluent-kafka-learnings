@@ -139,10 +139,21 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                         <goal>schema</goal>
                     </goals>
                     <configuration>
-                        <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/</sourceDirectory>
+<!--                        <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/</sourceDirectory>-->
+<!--                        <includes>-->
+<!--                            <include>Payment.avsc</include>-->
+<!--                            <include>Refund.avsc</include>-->
+<!--                        </includes>-->
+                        <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/</sourceDirectory>
+                        <imports>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/Refund.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/AllTypes.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Payload.avsc</import>
+                        </imports>
                         <includes>
-                            <include>Payment.avsc</include>
-                            <include>Refund.avsc</include>
+                            <include>*.avsc</include>
                         </includes>
                         <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
                     </configuration>
@@ -163,23 +174,39 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                     <all-types-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/AllTypes.avsc</all-types-value>
                     <refund>src/main/resources/avro/io/confluent/examples/clients/basicavro/Refund.avsc</refund>
                     <payment>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment.avsc</payment>
+                    <envelope>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope.avsc</envelope>
+                    <payload>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Payload.avsc</payload>
+                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/CreditEvent.avsc</transactions-value>
                 </subjects>
                 <schemaTypes>
                     <all-types-value>AVRO</all-types-value>
                     <refund>AVRO</refund>
                     <payment>AVRO</payment>
+                    <envelope>AVRO</envelope>
+                    <payload>AVRO</payload>
+                    <transactions-value>AVRO</transactions-value>
                 </schemaTypes>
                 <references>
                     <all-types-value>
                         <reference>
                             <name>io.confluent.examples.clients.basicavro.Payment</name>
                             <subject>payment</subject>
-                        </reference>
+                         </reference>
                         <reference>
                             <name>io.confluent.examples.clients.basicavro.Refund</name>
                             <subject>refund</subject>
-                        </reference>
+                         </reference>
                     </all-types-value>
+                    <transactions-value>
+                        <reference>
+                            <name>io.confluent.union.example.avro.event.EventEnvelope_v2_1</name>
+                            <subject>envelope</subject>
+                        </reference>
+                        <reference>
+                            <name>io.confluent.union.example.avro.event.EventPayload_v1_0</name>
+                            <subject>payload</subject>
+                        </reference>
+                    </transactions-value>
                 </references>
             </configuration>
             <goals>

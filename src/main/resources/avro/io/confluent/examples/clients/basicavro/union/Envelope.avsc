@@ -1,0 +1,43 @@
+{
+  "type": "record",
+  "namespace": "io.confluent.union.example.avro.event",
+  "name": "EventEnvelope_v2_2",
+  "fields": [
+    {
+      "name": "schemaId",
+      "type": "string"
+
+    },
+    {
+      "name": "eventType",
+      "type": {
+        "type": "enum",
+        "name" : "EventType",
+        "symbols": ["APPROVAL_EVENT",
+        "REJECTION_EVENT","CANCELLED_EVENT"]
+      }
+    },
+    {
+      "name": "initiatedBy",
+      "type": "string"
+    },
+    {
+      "name": "initiatedTimestamp",
+      "type": "string"
+    },
+    {
+      "name": "lineOfBusiness",
+      "type": ["null",
+        {
+          "type": "enum",
+          "name": "lineOfBusiness",
+          "symbols": [
+            "MKTG",
+            "RISK"
+          ]
+        }
+      ]
+    }
+
+  ]
+}

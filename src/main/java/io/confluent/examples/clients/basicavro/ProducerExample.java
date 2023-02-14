@@ -25,7 +25,8 @@ public class ProducerExample {
     public static void main(final String[] args) throws IOException {
 
         Properties props = buildProducerProperties();
-
+//:TODO : test against object name changes during schema version increments
+        //TODO: investigate using schema registry as a S3 bucket to store json schemas for consumer to use
         System.out.println("Props : " + props);
         try (KafkaProducer<String, Payment> producer = new KafkaProducer<String, Payment>(props)) {
             int count = 0 ;

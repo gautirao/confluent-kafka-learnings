@@ -1,0 +1,27 @@
+{
+  "type": "record",
+  "namespace": "io.confluent.union.example.avro.event",
+  "name": "EventPayload_v1_0",
+  "fields": [
+    {
+      "name": "schemaId",
+      "type": "string"
+    },
+    {
+      "name": "value",
+      "type": {
+        "type": "record",
+        "name": "PayloadValue",
+        "fields": [
+          {
+          "name": "journey",
+          "type": "string"
+        },
+          {
+            "name": "creditAmount",
+            "type": "double"
+          }]
+      }
+      }
+  ]
+}
