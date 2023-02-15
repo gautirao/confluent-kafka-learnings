@@ -1,7 +1,7 @@
 {
   "type": "record",
   "namespace": "io.confluent.union.example.avro.event",
-  "name": "EventEnvelope_v2_2",
+  "name": "EventEnvelope_v1_0",
   "fields": [
     {
       "name": "schemaId",
@@ -14,7 +14,7 @@
         "type": "enum",
         "name" : "EventType",
         "symbols": ["APPROVAL_EVENT",
-        "REJECTION_EVENT","CANCELLED_EVENT"]
+        "REJECTION_EVENT"]
       }
     },
     {

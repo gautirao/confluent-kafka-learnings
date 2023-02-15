@@ -1,7 +1,7 @@
 {
   "type": "record",
   "namespace": "io.confluent.union.example.avro.event",
-  "name": "Event_v2_2",
+  "name": "Event_v1_0",
   "fields": [
     {
       "name": "schemaId",
@@ -13,7 +13,7 @@
     },
     {
       "name": "envelope",
-      "type": "io.confluent.union.example.avro.event.EventEnvelope_v2_2"
+      "type": "io.confluent.union.example.avro.event.EventEnvelope_v1_0"
     },
     {
       "name": "payload",

@@ -177,6 +177,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                     <envelope>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope.avsc</envelope>
                     <payload>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Payload.avsc</payload>
                     <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/CreditEvent.avsc</transactions-value>
+                    <person>src/main/resources/avro/io/confluent/examples/clients/json/Person.json</person>
                 </subjects>
                 <schemaTypes>
                     <all-types-value>AVRO</all-types-value>
@@ -185,6 +186,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                     <envelope>AVRO</envelope>
                     <payload>AVRO</payload>
                     <transactions-value>AVRO</transactions-value>
+                    <person>JSON</person>
                 </schemaTypes>
                 <references>
                     <all-types-value>
@@ -199,7 +201,7 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                     </all-types-value>
                     <transactions-value>
                         <reference>
-                            <name>io.confluent.union.example.avro.event.EventEnvelope_v2_1</name>
+                            <name>io.confluent.union.example.avro.event.EventEnvelope_v1_0</name>
                             <subject>envelope</subject>
                         </reference>
                         <reference>
