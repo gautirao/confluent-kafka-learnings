@@ -1,6 +1,6 @@
 {
   "type": "record",
-  "namespace": "io.confluent.union.example.avro.event",
+  "namespace": "com.natwest.event",
   "name": "CreditEventV1_0",
   "fields": [
     {
@@ -15,13 +15,13 @@
       "default": null,
       "name": "envelope",
       "doc": "Envelope maintained by D&A",
-      "type":["null",  "io.confluent.union.example.avro.event.EventEnvelope_v1_0"]
+      "type":["null",  "com.natwest.event.v1_0.EventEnvelope"]
     },
     {
       "default": null,
       "name": "payload",
       "doc": "Payload schema maintained by Producer",
-      "type": ["null","io.confluent.union.example.avro.event.EventPayload_v1_0"]
+      "type": ["null","com.natwest.event.v1_0.EventPayload"]
     }
   ]
 }

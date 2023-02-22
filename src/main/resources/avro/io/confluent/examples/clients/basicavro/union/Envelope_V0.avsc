@@ -1,7 +1,7 @@
 {
   "type": "record",
-  "namespace": "io.confluent.union.example.avro.event",
-  "name": "EventEnvelope_v1_0",
+  "namespace": "com.natwest.event.v1_0",
+  "name": "EventEnvelope",
   "fields": [
     {
       "name": "schemaId",
@@ -13,6 +13,7 @@
       "type": {
         "type": "enum",
         "name" : "EventType",
+        "namespace": "com.natwest.event.v1_0",
         "symbols": ["APPROVAL_EVENT"]
       }
     },
@@ -30,6 +31,7 @@
         {
           "type": "enum",
           "name": "lineOfBusiness",
+          "namespace": "com.natwest.event.v1_0",
           "symbols": [
             "MKTG",
             "RISK"

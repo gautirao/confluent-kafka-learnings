@@ -1,6 +1,8 @@
 package io.confluent.examples.clients.basicavro;
 
-import io.confluent.union.example.avro.event.*;
+import com.natwest.event.CreditEventV1_0;
+import com.natwest.event.v1_0.EventEnvelope;
+import com.natwest.event.v1_0.PayloadValue;
 import org.apache.kafka.clients.producer.KafkaProducer;
 import org.apache.kafka.clients.producer.ProducerRecord;
 
@@ -30,22 +32,21 @@ public class EventProducer {
             e.printStackTrace();
         }
     }
-
     private static CreditEventV1_0 createCreditEvent(int count) {
 
         return CreditEventV1_0.newBuilder().setEventUniqueId(count+"").setSchemaId("CreditEvent_V1_0").setEnvelope(getEnvelope(count)).setPayload(getPayload(count)).build();
     }
 
-    private static EventPayload_v1_0 getPayload(int count) {
-        return EventPayload_v1_0.newBuilder().setSchemaId("paylaod_"+count).setValue(getPayloadValue(count)).build();
+    private static com.natwest.event.v1_0.EventPayload getPayload(int count) {
+        return com.natwest.event.v1_0.EventPayload.newBuilder().setSchemaId("paylaod_"+count).setValue(getPayloadValue(count)).build();
     }
 
-    private static PayloadValue getPayloadValue(int count) {
+    private static com.natwest.event.v1_0.PayloadValue getPayloadValue(int count) {
         return PayloadValue.newBuilder().setCreditAmount(count).setJourney("marketing").build();
     }
 
-    private static EventEnvelope_v1_0 getEnvelope(int count) {
-        return EventEnvelope_v1_0.newBuilder().setEventType(EventType.APPROVAL_EVENT).setSchemaId("envelope_"+count).setLineOfBusiness(lineOfBusiness.MKTG).build();
+    private static EventEnvelope getEnvelope(int count) {
+        return com.natwest.event.v1_0.EventEnvelope.newBuilder().setEventType(com.natwest.event.v1_0.EventType.APPROVAL_EVENT).setSchemaId("envelope_"+count).setLineOfBusiness(com.natwest.event.v1_0.lineOfBusiness.MKTG).build();
 
     }
 }

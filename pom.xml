@@ -172,30 +172,30 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 </schemaRegistryUrls>
                 <userInfoConfig>${schemaRegistryBasicAuthUserInfo}</userInfoConfig>
                 <subjects>
-                    <io.confluent.union.example.avro.event.EventEnvelope_v1_0>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V0.avsc</io.confluent.union.example.avro.event.EventEnvelope_v1_0>
-<!--                    <io.confluent.union.example.avro.event.EventEnvelope_v1_1>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V1.avsc</io.confluent.union.example.avro.event.EventEnvelope_v1_1>-->
-                    <io.confluent.union.example.avro.event.EventPayload_v1_0>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Payload.avsc</io.confluent.union.example.avro.event.EventPayload_v1_0>
+                    <com.natwest.event.v1_0.EventEnvelope>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V0.avsc</com.natwest.event.v1_0.EventEnvelope>
+<!--                    <com.natwest.event.v1_1.EventEnvelope>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V1.avsc</com.natwest.event.v1_1.EventEnvelope>-->
+                    <com.natwest.event.v1_0.EventPayload>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Payload.avsc</com.natwest.event.v1_0.EventPayload>
                     <creditevents-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/CreditEvent.avsc</creditevents-value>
                 </subjects>
                 <schemaTypes>
-                     <io.confluent.union.example.avro.event.EventEnvelope_v1_0>AVRO</io.confluent.union.example.avro.event.EventEnvelope_v1_0>
-<!--                     <io.confluent.union.example.avro.event.EventEnvelope_v1_1>AVRO</io.confluent.union.example.avro.event.EventEnvelope_v1_1>-->
-                    <io.confluent.union.example.avro.event.EventPayload_v1_0>AVRO</io.confluent.union.example.avro.event.EventPayload_v1_0>
+                     <com.natwest.event.v1_0.EventEnvelope>AVRO</com.natwest.event.v1_0.EventEnvelope>
+<!--                     <com.natwest.event.v1_1.EventEnvelope>AVRO</com.natwest.event.v1_1.EventEnvelope>-->
+                    <com.natwest.event.v1_0.EventPayload>AVRO</com.natwest.event.v1_0.EventPayload>
                     <transactions-value>AVRO</transactions-value>
                  </schemaTypes>
                 <references>
                      <creditevents-value>
-<!--                         <reference>-->
-<!--                            <name>io.confluent.union.example.avro.event.EventEnvelope_v1_1</name>-->
-<!--                            <subject>io.confluent.union.example.avro.event.EventEnvelope_v1_1</subject>-->
-<!--                        </reference>-->
                          <reference>
-                            <name>io.confluent.union.example.avro.event.EventEnvelope_v1_0</name>
-                            <subject>io.confluent.union.example.avro.event.EventEnvelope_v1_0</subject>
-                        </reference>
+                             <name>com.natwest.event.v1_0.EventEnvelope</name>
+                             <subject>com.natwest.event.v1_0.EventEnvelope</subject>
+                         </reference>
+<!--                         <reference>-->
+<!--                             <name>com.natwest.event.v1_1.EventEnvelope</name>-->
+<!--                             <subject>com.natwest.event.v1_1.EventEnvelope</subject>-->
+<!--                         </reference>-->
                         <reference>
-                            <name>io.confluent.union.example.avro.event.EventPayload_v1_0</name>
-                            <subject>io.confluent.union.example.avro.event.EventPayload_v1_0</subject>
+                            <name>com.natwest.event.v1_0.EventPayload</name>
+                            <subject>com.natwest.event.v1_0.EventPayload</subject>
                         </reference>
                     </creditevents-value>
                 </references>

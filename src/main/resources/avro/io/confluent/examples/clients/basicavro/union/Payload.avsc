@@ -1,7 +1,7 @@
 {
   "type": "record",
-  "namespace": "io.confluent.union.example.avro.event",
-  "name": "EventPayload_v1_0",
+  "namespace": "com.natwest.event.v1_0",
+  "name": "EventPayload",
   "fields": [
     {
       "name": "schemaId",
@@ -12,6 +12,7 @@
       "type": {
         "type": "record",
         "name": "PayloadValue",
+        "namespace": "com.natwest.event.v1_0",
         "fields": [
           {
           "name": "journey",
