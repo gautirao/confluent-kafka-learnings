@@ -149,7 +149,8 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                             <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment.avsc</import>
                             <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/Refund.avsc</import>
                             <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/AllTypes.avsc</import>
-                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V0.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V1.avsc</import>
                             <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Payload.avsc</import>
                         </imports>
                         <includes>
@@ -171,48 +172,64 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 </schemaRegistryUrls>
                 <userInfoConfig>${schemaRegistryBasicAuthUserInfo}</userInfoConfig>
                 <subjects>
-                    <all-types-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/AllTypes.avsc</all-types-value>
-                    <refund>src/main/resources/avro/io/confluent/examples/clients/basicavro/Refund.avsc</refund>
-                    <payment>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment.avsc</payment>
-                    <envelope>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope.avsc</envelope>
-                    <payload>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Payload.avsc</payload>
-                    <transactions-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/CreditEvent.avsc</transactions-value>
-                    <person>src/main/resources/avro/io/confluent/examples/clients/json/Person.json</person>
+                    <io.confluent.union.example.avro.event.EventEnvelope_v1_0>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V0.avsc</io.confluent.union.example.avro.event.EventEnvelope_v1_0>
+<!--                    <io.confluent.union.example.avro.event.EventEnvelope_v1_1>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V1.avsc</io.confluent.union.example.avro.event.EventEnvelope_v1_1>-->
+                    <io.confluent.union.example.avro.event.EventPayload_v1_0>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Payload.avsc</io.confluent.union.example.avro.event.EventPayload_v1_0>
+                    <creditevents-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/CreditEvent.avsc</creditevents-value>
                 </subjects>
                 <schemaTypes>
-                    <all-types-value>AVRO</all-types-value>
-                    <refund>AVRO</refund>
-                    <payment>AVRO</payment>
-                    <envelope>AVRO</envelope>
-                    <payload>AVRO</payload>
+                     <io.confluent.union.example.avro.event.EventEnvelope_v1_0>AVRO</io.confluent.union.example.avro.event.EventEnvelope_v1_0>
+<!--                     <io.confluent.union.example.avro.event.EventEnvelope_v1_1>AVRO</io.confluent.union.example.avro.event.EventEnvelope_v1_1>-->
+                    <io.confluent.union.example.avro.event.EventPayload_v1_0>AVRO</io.confluent.union.example.avro.event.EventPayload_v1_0>
                     <transactions-value>AVRO</transactions-value>
-                    <person>JSON</person>
-                </schemaTypes>
+                 </schemaTypes>
                 <references>
-                    <all-types-value>
-                        <reference>
-                            <name>io.confluent.examples.clients.basicavro.Payment</name>
-                            <subject>payment</subject>
-                         </reference>
-                        <reference>
-                            <name>io.confluent.examples.clients.basicavro.Refund</name>
-                            <subject>refund</subject>
-                         </reference>
-                    </all-types-value>
-                    <transactions-value>
-                        <reference>
+                     <creditevents-value>
+<!--                         <reference>-->
+<!--                            <name>io.confluent.union.example.avro.event.EventEnvelope_v1_1</name>-->
+<!--                            <subject>io.confluent.union.example.avro.event.EventEnvelope_v1_1</subject>-->
+<!--                        </reference>-->
+                         <reference>
                             <name>io.confluent.union.example.avro.event.EventEnvelope_v1_0</name>
-                            <subject>envelope</subject>
+                            <subject>io.confluent.union.example.avro.event.EventEnvelope_v1_0</subject>
                         </reference>
                         <reference>
                             <name>io.confluent.union.example.avro.event.EventPayload_v1_0</name>
-                            <subject>payload</subject>
+                            <subject>io.confluent.union.example.avro.event.EventPayload_v1_0</subject>
                         </reference>
-                    </transactions-value>
+                    </creditevents-value>
                 </references>
+<!--                <configs>-->
+<!--                    <schema.registry.value.subject.name.strategy>io.confluent.kafka.serializers.subject.RecordNameStrategy</schema.registry.value.subject.name.strategy>-->
+<!--                </configs>-->
             </configuration>
             <goals>
                 <goal>register</goal>
+            </goals>
+        </plugin>
+
+        <plugin>
+            <groupId>io.confluent</groupId>
+            <artifactId>kafka-schema-registry-maven-plugin</artifactId>
+            <version>7.3.1</version>
+            <configuration>
+                <schemaRegistryUrls>
+                    <param>${schemaRegistryUrl}</param>
+                </schemaRegistryUrls>
+                <userInfoConfig>${schemaRegistryBasicAuthUserInfo}</userInfoConfig>
+                <compatibilityLevels>
+                    <creditevents-value>NONE</creditevents-value>
+                </compatibilityLevels>
+                <subjects>
+                    <creditevents-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/CreditEvent.avsc</creditevents-value>
+                </subjects>
+                <schemaTypes>
+                    <creditevents-value>AVRO</creditevents-value>
+                </schemaTypes>
+
+            </configuration>
+            <goals>
+                <goal>set-compatibility</goal>
             </goals>
         </plugin>
 

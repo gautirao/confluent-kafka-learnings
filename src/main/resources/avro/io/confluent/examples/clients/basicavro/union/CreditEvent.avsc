@@ -1,7 +1,7 @@
 {
   "type": "record",
   "namespace": "io.confluent.union.example.avro.event",
-  "name": "Event_v1_0",
+  "name": "CreditEventV1_0",
   "fields": [
     {
       "name": "schemaId",
@@ -12,12 +12,16 @@
       "type": "string"
     },
     {
+      "default": null,
       "name": "envelope",
-      "type": "io.confluent.union.example.avro.event.EventEnvelope_v1_0"
+      "doc": "Envelope maintained by D&A",
+      "type":["null",  "io.confluent.union.example.avro.event.EventEnvelope_v1_0"]
     },
     {
+      "default": null,
       "name": "payload",
-      "type": "io.confluent.union.example.avro.event.EventPayload_v1_0"
+      "doc": "Payload schema maintained by Producer",
+      "type": ["null","io.confluent.union.example.avro.event.EventPayload_v1_0"]
     }
   ]
 }

@@ -1,7 +1,7 @@
 {
   "type": "record",
-  "namespace": "io.confluent.union.example.avro.event",
-  "name": "EventEnvelope_v1_0",
+  "namespace": "com.natwest.envelope.v1",
+  "name": "EventEnvelope_v1_1",
   "fields": [
     {
       "name": "schemaId",
@@ -14,7 +14,7 @@
         "type": "enum",
         "name" : "EventType",
         "symbols": ["APPROVAL_EVENT",
-        "REJECTION_EVENT"]
+          "REJECTION_EVENT"]
       }
     },
     {
