@@ -4,6 +4,7 @@
  "name": "Refund",
  "fields": [
      {"name": "id", "type": "string"},
-     {"name": "refundAmount", "type": "double"}
+     {"name": "refundAmount", "type": "double"},
+     {"name": "refundReason", "type": "string"}
  ]
 }

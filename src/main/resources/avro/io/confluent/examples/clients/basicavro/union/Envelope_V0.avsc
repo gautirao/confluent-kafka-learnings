@@ -1,0 +1,44 @@
+{
+  "type": "record",
+  "namespace": "com.natwest.event.v1_0",
+  "name": "EventEnvelope",
+  "fields": [
+    {
+      "name": "schemaId",
+      "type": "string"
+
+    },
+    {
+      "name": "eventType",
+      "type": {
+        "type": "enum",
+        "name" : "EventType",
+        "namespace": "com.natwest.event.v1_0",
+        "symbols": ["APPROVAL_EVENT"]
+      }
+    },
+    {
+      "name": "initiatedBy",
+      "type": "string"
+    },
+    {
+      "name": "initiatedTimestamp",
+      "type": "string"
+    },
+    {
+      "name": "lineOfBusiness",
+      "type": ["null",
+        {
+          "type": "enum",
+          "name": "lineOfBusiness",
+          "namespace": "com.natwest.event.v1_0",
+          "symbols": [
+            "MKTG",
+            "RISK"
+          ]
+        }
+      ]
+    }
+
+  ]
+}

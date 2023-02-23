@@ -23,9 +23,9 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
     <checkstyle.suppressions.location>checkstyle/suppressions.xml</checkstyle.suppressions.location>
-    <schemaRegistryUrl>https://psrc-8kz20.us-east-2.aws.confluent.cloud</schemaRegistryUrl>
-    <schemaRegistryBasicAuthUserInfo>6VRQFCHS5PPL5AIG:jT2fieiR819YKb0VbTAH1fgX/urzkBT31xMa19VBOZMlivvjpgrjpHtRbDjf9DZb</schemaRegistryBasicAuthUserInfo>
-      <confluentUserInfoConfig>MZDLPVDJJOWUK67I:SmWXW+WSOk6kGdpM0NsI6vxE/410N34QtV6G5KAJonyMlDLb3JrnOF7NfshBIs1E</confluentUserInfoConfig>
+    <schemaRegistryUrl>https://psrc-0kywq.us-east-2.aws.confluent.cloud</schemaRegistryUrl>
+    <schemaRegistryBasicAuthUserInfo>IUKGJ6KENRGOBNBL:dPl9EWzuoWd3RZ4V8OP6IgHeZaV1vyhAS7tyCguk/SyOjb61iypYr7AaLqSaUyKz</schemaRegistryBasicAuthUserInfo>
+      <confluentUserInfoConfig>YVT2ZPARLNXMPCGA:B7GWXvkptNFz7X/k5b38ABoukVDFhZYJMAm+g2Lu7b4CPd+ELGCxF0XCFSv8xGLd</confluentUserInfoConfig>
     <io.confluent.schema-registry.version>7.3.1</io.confluent.schema-registry.version>
       <log4j2-version>2.19.0</log4j2-version>
       <avro.version>1.11.0</avro.version>
@@ -139,10 +139,24 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                         <goal>schema</goal>
                     </goals>
                     <configuration>
-                        <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/</sourceDirectory>
+<!--                        <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/</sourceDirectory>-->
+<!--                        <includes>-->
+<!--                            <include>Payment.avsc</include>-->
+<!--                            <include>Refund.avsc</include>-->
+<!--                        </includes>-->
+                        <sourceDirectory>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/</sourceDirectory>
+                        <imports>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/Refund.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/AllTypes.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V0.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V1.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Payload.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/CreditEvent_V1_0.avsc</import>
+                            <import>${project.basedir}/src/main/resources/avro/io/confluent/examples/clients/basicavro/union/CreditEvent_V1_1.avsc</import>
+                        </imports>
                         <includes>
-                            <include>Payment.avsc</include>
-                            <include>Refund.avsc</include>
+                            <include>*.avsc</include>
                         </includes>
                         <outputDirectory>${project.build.directory}/generated-sources</outputDirectory>
                     </configuration>
@@ -160,16 +174,59 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                 </schemaRegistryUrls>
                 <userInfoConfig>${schemaRegistryBasicAuthUserInfo}</userInfoConfig>
                 <subjects>
-                    <all-types-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/AllTypes.avsc</all-types-value>
+                    <com.natwest.event.v1_0.EventEnvelope>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V0.avsc</com.natwest.event.v1_0.EventEnvelope>
+                    <com.natwest.event.v1_1.EventEnvelope>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Envelope_V1.avsc</com.natwest.event.v1_1.EventEnvelope>
+                    <com.natwest.event.v1_0.EventPayload>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/Payload.avsc</com.natwest.event.v1_0.EventPayload>
+                    <com.natwest.event.v1_0.CreditEvent>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/CreditEvent_V1_0.avsc</com.natwest.event.v1_0.CreditEvent>
+                    <com.natwest.event.v1_1.CreditEvent>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/CreditEvent_V1_1.avsc</com.natwest.event.v1_1.CreditEvent>
+                    <creditevents-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/union/AllCreditEventTypes.avsc</creditevents-value>
                     <refund>src/main/resources/avro/io/confluent/examples/clients/basicavro/Refund.avsc</refund>
                     <payment>src/main/resources/avro/io/confluent/examples/clients/basicavro/Payment.avsc</payment>
+                    <all-types-value>src/main/resources/avro/io/confluent/examples/clients/basicavro/AllTypes.avsc</all-types-value>
+
                 </subjects>
                 <schemaTypes>
+                     <com.natwest.event.v1_0.EventEnvelope>AVRO</com.natwest.event.v1_0.EventEnvelope>
+                     <com.natwest.event.v1_1.EventEnvelope>AVRO</com.natwest.event.v1_1.EventEnvelope>
+                    <com.natwest.event.v1_0.EventPayload>AVRO</com.natwest.event.v1_0.EventPayload>
+                    <com.natwest.event.v1_0.CreditEvent>AVRO</com.natwest.event.v1_0.CreditEvent>
+                    <com.natwest.event.v1_1.CreditEvent>AVRO</com.natwest.event.v1_1.CreditEvent>
                     <all-types-value>AVRO</all-types-value>
                     <refund>AVRO</refund>
                     <payment>AVRO</payment>
-                </schemaTypes>
+                    <creditevents-value>AVRO</creditevents-value>
+                 </schemaTypes>
                 <references>
+                     <creditevents-value>
+                         <reference>
+                             <name>com.natwest.event.v1_0.CreditEvent</name>
+                             <subject>com.natwest.event.v1_0.CreditEvent</subject>
+                         </reference>
+                         <reference>
+                             <name>com.natwest.event.v1_1.CreditEvent</name>
+                             <subject>com.natwest.event.v1_1.CreditEvent</subject>
+                         </reference>
+                    </creditevents-value>
+                    <com.natwest.event.v1_0.CreditEvent>
+                    <reference>
+                        <name>com.natwest.event.v1_0.EventEnvelope</name>
+                        <subject>com.natwest.event.v1_0.EventEnvelope</subject>
+                    </reference>
+                    <reference>
+                        <name>com.natwest.event.v1_0.EventPayload</name>
+                        <subject>com.natwest.event.v1_0.EventPayload</subject>
+                    </reference>
+                    </com.natwest.event.v1_0.CreditEvent>
+                    <com.natwest.event.v1_1.CreditEvent>
+                    <reference>
+                        <name>com.natwest.event.v1_1.EventEnvelope</name>
+                        <subject>com.natwest.event.v1_1.EventEnvelope</subject>
+                    </reference>
+                    <reference>
+                        <name>com.natwest.event.v1_0.EventPayload</name>
+                        <subject>com.natwest.event.v1_0.EventPayload</subject>
+                    </reference>
+                </com.natwest.event.v1_1.CreditEvent>
                     <all-types-value>
                         <reference>
                             <name>io.confluent.examples.clients.basicavro.Payment</name>
@@ -181,6 +238,9 @@ http://maven.apache.org/xsd/maven-4.0.0.xsd">
                         </reference>
                     </all-types-value>
                 </references>
+<!--                <configs>-->
+<!--                    <schema.registry.value.subject.name.strategy>io.confluent.kafka.serializers.subject.RecordNameStrategy</schema.registry.value.subject.name.strategy>-->
+<!--                </configs>-->
             </configuration>
             <goals>
                 <goal>register</goal>

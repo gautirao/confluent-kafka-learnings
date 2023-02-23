@@ -1,0 +1,28 @@
+{
+  "type": "record",
+  "namespace": "com.natwest.event.v1_0",
+  "name": "EventPayload",
+  "fields": [
+    {
+      "name": "schemaId",
+      "type": "string"
+    },
+    {
+      "name": "value",
+      "type": {
+        "type": "record",
+        "name": "PayloadValue",
+        "namespace": "com.natwest.event.v1_0",
+        "fields": [
+          {
+          "name": "journey",
+          "type": "string"
+        },
+          {
+            "name": "creditAmount",
+            "type": "double"
+          }]
+      }
+      }
+  ]
+}
