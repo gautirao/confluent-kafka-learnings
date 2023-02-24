@@ -36,37 +36,35 @@ for confluentDependencies in {"kafka-protobuf-types/7.3.1","kafka-protobuf-provi
   ls $mvnPath
 done
 
-
-for apacheDependencies in {"kafka-clients/7.3.1-ccs"}; do
+for apacheDependencies in "kafka-clients/7.3.1-ccs"; do
   # Get the first item in the split string
-  artifact="$(echo apacheDependencies | cut -d'/' -f1)"
+  artifact="$(echo $apacheDependencies | cut -d'/' -f1)"
 
   # Get the second item in the split string
-  version="$(echo apacheDependencies | cut -d'/' -f2)
+  version="$(echo $apacheDependencies | cut -d'/' -f2)"
 
-   mvnPath="/home/raogc/.m2/repository/org/apache/kafka/$artifact/$version"
-    # Confirm the result by outputting it to screen
-    echo "maven path $mvnPath"
+  mvnPath="/home/raogc/.m2/repository/org/apache/kafka/$artifact/$version"
+  # Confirm the result by outputting it to screen
+  echo "maven path $mvnPath"
 
-    if [ ! -d $mvnPath ]; then
-      mkdir -p "$mvnPath"
-    fi
+  if [ ! -d $mvnPath ]; then
+    mkdir -p "$mvnPath"
+  fi
 
-    if [ -d $mvnPath ]; then
-      echo "$mvnPath exists"
-    fi
+  if [ -d $mvnPath ]; then
+    echo "$mvnPath exists"
+  fi
 
-    urlBase="https://packages.confluent.io/maven/org/apache/kafka"
-    artifactPath="$urlBase/$artifact/$version"
-    artifactBaseFilePath="$artifactPath/$artifact-$version"
-    jarFile="$artifactBaseFilePath.jar"
-    pomFile="$artifactBaseFilePath.pom"
+  urlBase="https://packages.confluent.io/maven/org/apache/kafka"
+  artifactPath="$urlBase/$artifact/$version"
+  artifactBaseFilePath="$artifactPath/$artifact-$version"
+  jarFile="$artifactBaseFilePath.jar"
+  pomFile="$artifactBaseFilePath.pom"
 
-    echo "jar $jarFile pom $pomFile"
+  echo "jar $jarFile pom $pomFile"
 
-    wget $jarFile -P $mvnPath
-    wget $pomFile -P $mvnPath
+  wget $jarFile -P $mvnPath
+  wget $pomFile -P $mvnPath
 
-    ls $mvnPath
+  ls $mvnPath
 done
-
